@@ -7,7 +7,7 @@ from socialoauth.sites.base import OAuth2
 from socialoauth.exception import SocialAPIError, SocialSitesConfigError
 
 
-class Wechat(OAuth2):
+class WechatApp(OAuth2):
     AUTHORIZE_URL = 'https://open.weixin.qq.com/connect/oauth2/authorize'
     ACCESS_TOKEN_URL = 'https://api.weixin.qq.com/sns/oauth2/access_token'
     OPENID_URL = 'https://api.weixin.qq.com/sns/userinfo'

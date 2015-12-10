@@ -8,7 +8,7 @@ from socialoauth.exception import SocialAPIError
 
 QQ_OPENID_PATTERN = re.compile('\{.+\}')
 
-class QQ(OAuth2):
+class QQApp(OAuth2):
     AUTHORIZE_URL = 'https://graph.qq.com/oauth2.0/authorize'
     ACCESS_TOKEN_URL = 'https://graph.qq.com/oauth2.0/token'
 
@@ -37,32 +37,16 @@ class QQ(OAuth2):
         data.update(kwargs)
         return data
 
-
-
     def parse_token_response(self, res):
-        if 'callback(' in res:
-            res = res[res.index('(')+1:res.rindex(')')]
-            res = json.loads(res)
-            raise SocialAPIError(self.site_name, '', u'%s:%s' % (res['error'],res['error_description']) )
-        else:
-            res = res.split('&')
-            res = [_r.split('=') for _r in res]
-            res = dict(res)
-
+        self.uid = res['userid']
         self.access_token = res['access_token']
-        self.expires_in = int(res['expires_in'])
+        self.expires_in = None
         self.refresh_token = None
-
-        res = self.http_get(self.OPENID_URL, {'access_token': self.access_token}, parse=False)
-        res = json.loads(QQ_OPENID_PATTERN.search(res).group())
-
-        self.uid = res['openid']
 
         _url = 'https://graph.qq.com/user/get_user_info'
         res = self.api_call_get(_url)
         if res['ret'] != 0:
             raise SocialAPIError(self.site_name, _url, res)
-
 
         self.name = res['nickname']
         self.avatar = res['figureurl_qq_1']

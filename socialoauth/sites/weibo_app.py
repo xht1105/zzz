@@ -3,7 +3,7 @@
 from socialoauth.sites.base import OAuth2
 
 
-class Weibo(OAuth2):
+class WeiboApp(OAuth2):
     AUTHORIZE_URL = 'https://api.weibo.com/oauth2/authorize'
     ACCESS_TOKEN_URL = 'https://api.weibo.com/oauth2/access_token'
 
@@ -19,7 +19,7 @@ class Weibo(OAuth2):
         return data
 
     def parse_token_response(self, res):
-        self.uid = res['uid']
+        self.uid = res['userid']
         self.access_token = res['access_token']
         self.expires_in = None
         self.refresh_token = None
@@ -33,7 +33,6 @@ class Weibo(OAuth2):
         self.avatar = res['profile_image_url']
         self.avatar_large = res['avatar_large']
         self.gender = res['gender']
-
 
 
     def post_status(self, text):

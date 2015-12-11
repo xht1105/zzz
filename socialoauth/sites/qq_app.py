@@ -17,12 +17,12 @@ class QQApp(OAuth2):
 
     @property
     def authorize_url(self):
-        url = super(QQ, self).authorize_url
+        url = super(QQApp, self).authorize_url
         return '%s&state=socialoauth' % url
 
 
     def get_access_token(self, code):
-        super(QQ, self).get_access_token(code, method='GET', parse=False)
+        super(QQApp, self).get_access_token(code, method='GET', parse=False)
 
 
     def build_api_url(self, url):

@@ -32,7 +32,7 @@ class WeiboApp(OAuth2):
         self.name = res['name']
         self.avatar = res['profile_image_url']
         self.avatar_large = res['avatar_large']
-        self.gender = res['gender']
+        self.gender = res['gender'] == "m" and "M" or "F"
 
 
     def post_status(self, text):

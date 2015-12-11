@@ -73,7 +73,7 @@ class WechatApp(OAuth2):
             self.name = res['nickname']
             self.avatar = res['headimgurl']
             self.avatar_large = res['headimgurl']
-            self.gender = res['sex']
+            self.gender = res['sex']== 1 and "M" or "F"
         else:
             self.name = ''
             self.avatar = ''

@@ -54,7 +54,7 @@ class WechatApp(OAuth2):
         return data
 
     def parse_token_response(self, res):
-        print res
+        res = json.loads(res)
 
         self.access_token = res['access_token']
         self.expires_in = int(res['expires_in'])

@@ -12,7 +12,8 @@ class Facebook(OAuth2):
 
     def build_api_data(self, **kwargs):
         data = {
-            'access_token': self.access_token
+            'access_token': self.access_token,
+            'fields': 'name,gender,picture.type(large)',
         }
         data.update(kwargs)
         return data
@@ -22,13 +23,12 @@ class Facebook(OAuth2):
         res = [_r.split('=') for _r in res]
         res = dict(res)
 
-        print res
         self.access_token = res['access_token']
         self.expires_in = int(res['expires'])
         self.uid = res['userID']
         self.refresh_token = None
 
-        res = self.api_call_get(self.GRAPH_URL+'/me?fields=name,gender,picture')
+        res = self.api_call_get(self.GRAPH_URL+'/me')
 
         self.name = res['name']
         self.avatar = res['picture']['data']['url']

@@ -28,9 +28,7 @@ class Facebook(OAuth2):
         self.uid = res['userID']
         self.refresh_token = None
 
-        res = self.api_call_get(self.GRAPH_URL+'/me?fields=name,gender,picture', {
-            'access_token': self.access_token
-        })
+        res = self.api_call_get(self.GRAPH_URL+'/me?fields=name,gender,picture')
 
         self.name = res['name']
         self.avatar = res['picture']['data']['url']

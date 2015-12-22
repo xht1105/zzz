@@ -18,9 +18,10 @@ class FacebookApp(OAuth2):
         return data
 
     def parse_token_response(self, res):
+        print res
         self.access_token = res['accessToken']
         self.expires_in = int(res['expiresIn'])
-        self.uid = res['userId']
+        self.uid = res['userID']
         self.refresh_token = None
 
         res = self.api_call_get(self.GRAPH_URL+'/me?fields=name,gender,picture', {

@@ -25,7 +25,7 @@ class Facebook(OAuth2):
         print res
         self.access_token = res['access_token']
         self.expires_in = int(res['expires'])
-        self.uid = res['userId']
+        self.uid = res['userID']
         self.refresh_token = None
 
         res = self.api_call_get(self.GRAPH_URL+'/me?fields=name,gender,picture', {

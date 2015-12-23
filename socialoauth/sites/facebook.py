@@ -6,8 +6,6 @@ class Facebook(OAuth2):
     GRAPH_URL        = 'https://graph.facebook.com'
     AUTHORIZE_URL    = 'https://www.facebook.com/dialog/oauth'
     ACCESS_TOKEN_URL = '{0}/oauth/access_token'.format(GRAPH_URL)
-    SMALL_IMAGE = '{0}/{1}/picture'
-    LARGE_IMAGE = '{0}/{1}/picture?type=large'
 
     @property
     def authorize_url(self):
@@ -29,7 +27,6 @@ class Facebook(OAuth2):
         res = res.split('&')
         res = [_r.split('=') for _r in res]
         res = dict(res)
-        print res
 
         self.access_token = res['access_token']
         self.expires_in = int(res['expires'])
@@ -37,8 +34,7 @@ class Facebook(OAuth2):
 
         res = self.api_call_get(self.GRAPH_URL+'/me')
 
-        print res
-        self.uid = res['userID']
+        self.uid = res['id']
         self.name = res['name']
         self.avatar = res['picture']['data']['url']
         self.avatar_large = self.avatar

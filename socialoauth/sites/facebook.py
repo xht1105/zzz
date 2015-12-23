@@ -7,6 +7,11 @@ class Facebook(OAuth2):
     AUTHORIZE_URL    = 'https://www.facebook.com/dialog/oauth'
     ACCESS_TOKEN_URL = '{0}/oauth/access_token'.format(GRAPH_URL)
 
+    @property
+    def authorize_url(self):
+        url = super(Facebook, self).authorize_url
+        return '%s&scope=email,public_profile,user_friends&state=socialoauth' % url
+
     def build_api_url(self, url):
         return url
 

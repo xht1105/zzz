@@ -24,12 +24,13 @@ class Facebook(OAuth2):
         return data
 
     def parse_token_response(self, res):
-        res = res.split('&')
-        res = [_r.split('=') for _r in res]
-        res = dict(res)
+        param_str = [_r.split('=') for _r in res.split('&')]
+        data = {}
+        for s in param_str:
+            data.update({s[0]: s[1]})
 
-        self.access_token = res['access_token']
-        self.expires_in = int(res['expires'])
+        self.access_token = data['access_token']
+        self.expires_in = int(data['expires'])
         self.refresh_token = None
 
         res = self.api_call_get(self.GRAPH_URL+'/me')

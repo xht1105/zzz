@@ -51,7 +51,7 @@ class SocialSites(object):
                 'site_name_zh': _site_name_zh,
             }
 
-            for _k, _v in _site_config.iteritems():
+            for _k, _v in _site_config.items():
                 self._sites_class_config_table[_site_class][_k.upper()] = _v
 
             self._sites_name_list.append(_site_name)

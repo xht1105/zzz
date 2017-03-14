@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-
-from urllib import urlencode, quote_plus
-import urllib2
+from urllib import request
+from urllib.parse import quote_plus
 import json
+import requests
 from functools import wraps
 
 from socialoauth.exception import SocialAPIError, SocialSitesConfigError
@@ -20,15 +20,15 @@ def _http_error_handler(func):
     def deco(self, *args, **kwargs):
         try:
             res = func(self, *args, **kwargs)
-        except urllib2.HTTPError as e:
+        except request.HTTPError as e:
             raise SocialAPIError(self.site_name, e.url, e.read())
-        except urllib2.URLError as e:
+        except request.URLError as e:
             raise SocialAPIError(self.site_name, args[0], e.reason)
-        
+
         error_key = getattr(self, 'RESPONSE_ERROR_KEY', None)
         if error_key is not None and error_key in res:
             raise SocialAPIError(self.site_name, args[0], res)
-        
+
         return res
     return deco
 
@@ -62,7 +62,7 @@ class OAuth2(object):
     def __init__(self):
         """Get config from settings.
         class instance will have the following properties:
-        
+
         site_name
         site_id
         REDIRECT_URI
@@ -71,27 +71,27 @@ class OAuth2(object):
         """
         key = '%s.%s' % (self.__class__.__module__, self.__class__.__name__)
         configs = socialsites.load_config(key)
-        for k, v in configs.iteritems():
+        for k, v in configs.items():
             setattr(self, k, v)
 
 
     @_http_error_handler
     def http_get(self, url, data, parse=True):
-        req = urllib2.Request('%s?%s' % (url, urlencode(data)))
-        self.http_add_header(req)
-        res = urllib2.urlopen(req, timeout=HTTP_TIMEOUT).read()
+        req = requests.get(url, params=data)
         if parse:
-            return json.loads(res)
+            res = req.json()
+        else:
+            res = req.text
         return res
 
 
     @_http_error_handler
     def http_post(self, url, data, parse=True):
-        req = urllib2.Request(url, data=urlencode(data))
-        self.http_add_header(req)
-        res = urllib2.urlopen(req, timeout=HTTP_TIMEOUT).read()
+        req = requests.post(url, data=data)
         if parse:
-            return json.loads(res)
+            res = req.json()
+        else:
+            res = req.text
         return res
 
 
@@ -125,7 +125,7 @@ class OAuth2(object):
 
 
     def get_access_token(self, code, method='POST', parse=True):
-        """parse is True means that the api return a json string. 
+        """parse is True means that the api return a json string.
         So, the result will be parsed by json library.
         Most sites will follow this rule, return a json string.
         But some sites (e.g. Tencent), Will return an non json string,
@@ -150,7 +150,10 @@ class OAuth2(object):
         else:
             res = self.http_get(self.ACCESS_TOKEN_URL, data, parse=parse)
 
-        self.parse_token_response(res)
+        try:
+            self.parse_token_response(res)
+        except:
+            raise SocialAPIError(self.site_name, self.ACCESS_TOKEN_URL, res)
 
 
     def api_call_get(self, url=None, **kwargs):
@@ -183,4 +186,3 @@ class OAuth2(object):
 
     def build_api_data(self, **kwargs):
         raise NotImplementedError()
-

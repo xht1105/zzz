@@ -8,7 +8,8 @@ Python Package For SNS sites with OAuth2 support
 ## Feature
 
 *   易于扩展 [参见doc.md](/doc.md)
-*   统一的接口
+*   支持Python3
+*   统一的接口
 
     *   各个站点，都有 `uid`, `name`, `avatar`, 属性
 

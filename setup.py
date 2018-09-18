@@ -13,7 +13,7 @@ setup(
     version = socialoauth.VERSION,
     license = 'MIT',
     description = 'Python Package For SNS sites with OAuth2 support',
-    long_description = open('README.txt').read(),
+    long_description = open('README.txt', encoding='UTF-8').read(),
     author = 'Wang Chao',
     author_email = 'yueyoum@gmail.com',
     url = 'https://github.com/yueyoum/social-oauth',
